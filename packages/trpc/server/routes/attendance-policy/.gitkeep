@@ -1,0 +1,1 @@
+# tRPC router for the 'attendance-policy' domain. Add route.ts here and register it in packages/trpc/server/index.ts.
