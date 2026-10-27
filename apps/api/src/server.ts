@@ -12,7 +12,7 @@ import { env } from "./env";
 
 export const app = express();
 const openApiDocument = generateOpenApiDocument(serverRouter, {
-  title: "Streamyst OpenAPI",
+  title: "EMS API",
   version: "1.0.0",
   baseUrl: env.BASE_URL.concat("/api"),
 });
