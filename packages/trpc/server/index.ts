@@ -6,10 +6,7 @@ import { publicProcedure } from "./trpc";
 
 export const serverRouter = router({
   health: healthRouter,
-  auth: authRouter,
-  emsTest: publicProcedure.query(() => {
-    return { message: "Message from EMS API" };
-  }),
+  authRouter: authRouter,
 });
 
 export { createContext } from "./context";

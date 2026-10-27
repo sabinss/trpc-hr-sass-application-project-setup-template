@@ -1,1 +1,0 @@
-# tRPC router for the 'notification' domain. Add route.ts here and register it in packages/trpc/server/index.ts.
