@@ -25,6 +25,24 @@ services:
       - redis_data:/data
     command: ["redis-server", "--appendonly", "yes"]
 
+  reports-worker:
+    profiles: ["workers"]
+    build:
+      context: .
+      dockerfile: Dockerfile.jobs
+    command: pnpm --filter @repo/jobs start:reports
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgresdb:5432/postgres
+      REDIS_URL: redis://redis:6379
+    volumes:
+      - ./local-reports:/app/local-reports
+    depends_on:
+      postgresdb:
+        condition: service_started
+      redis:
+        condition: service_started
+
 volumes:
   pg_data:
   redis_data:

@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "tsx watch worker.ts"
+    "dev": "tsx watch worker.ts",
+    "dev:reports": "tsx watch workers/reports.ts",
+    "start:reports": "tsx workers/reports.ts"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
