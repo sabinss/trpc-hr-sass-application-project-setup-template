@@ -9,6 +9,7 @@ import { apiReference } from "@scalar/express-api-reference";
 import { serverRouter, createContext } from "@repo/trpc/server";
 
 import { env } from "./env";
+import { mountQueueDashboard, queueDashboardPath } from "./queue-dashboard";
 
 export const app = express();
 const openApiDocument = generateOpenApiDocument(serverRouter, {
@@ -44,6 +45,11 @@ app.get("/openapi.json", (req, res) => {
 
 logger.debug(`docs: ${env.BASE_URL}/docs`);
 app.use("/docs", apiReference({ url: "/openapi.json" }));
+
+if (env.NODE_ENV !== "prod") {
+  mountQueueDashboard(app);
+  logger.debug(`queues: ${env.BASE_URL}${queueDashboardPath}`);
+}
 
 app.use(
   "/api",

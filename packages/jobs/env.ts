@@ -1,0 +1,14 @@
+import "dotenv/config";
+import { z } from "zod";
+
+const envSchema = z.object({
+  REDIS_URL: z.string().default("redis://127.0.0.1:6379"),
+});
+
+function createEnv(env: NodeJS.ProcessEnv) {
+  const safeParseResult = envSchema.safeParse(env);
+  if (!safeParseResult.success) throw new Error(safeParseResult.error.message);
+  return safeParseResult.data;
+}
+
+export const env = createEnv(process.env);
