@@ -1,6 +1,6 @@
 import { Queue } from "bullmq";
-import { createRedisConnectionOptions } from "./connection";
-import { DEMO_QUEUE_NAME, demoJobData, type DemoJobData, type DemoJobResult } from "./demo-job";
+import { createRedisConnectionOptions } from "../connection";
+import { DEMO_QUEUE_NAME, demoJobData, type DemoJobData, type DemoJobResult } from "./job";
 
 export const demoQueue = new Queue<DemoJobData, DemoJobResult, "ping">(DEMO_QUEUE_NAME, {
   connection: createRedisConnectionOptions(),

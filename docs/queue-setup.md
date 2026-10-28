@@ -10,9 +10,10 @@ The API does not do the slow work. A tRPC procedure puts a job in Redis and retu
 | ------------ | ------------------------------------------- | ----------------------------------------------------------- |
 | Redis        | `docker-compose.yml`                        | Stores the queues and jobs. Runs on `127.0.0.1:6379`.       |
 | Connection   | `packages/jobs/connection.ts`               | Turns `REDIS_URL` into BullMQ connection options.           |
-| Job contract | `packages/jobs/demo-job.ts`                 | Queue name, payload schema, and result schema.              |
-| Queue        | `packages/jobs/queue.ts`                    | Producer. Adds jobs and reads their status.                 |
-| Worker       | `packages/jobs/worker.ts`                   | Consumer. Runs in its own process and performs the job.     |
+| Job contract | `packages/jobs/demo/job.ts`                 | Queue name, payload schema, and result schema.              |
+| Queue        | `packages/jobs/demo/queue.ts`               | Producer. Adds jobs and reads their status.                 |
+| Worker       | `packages/jobs/demo/worker.ts`              | Consumer for the demo queue.                                |
+| Process      | `packages/jobs/worker.ts`                   | Starts every feature worker in one process.                 |
 | tRPC route   | `packages/trpc/server/routes/jobs/route.ts` | The HTTP entry point. It only enqueues or reads a job.      |
 | Dashboard    | `apps/api/src/queue-dashboard.ts`           | Bull Board UI. `BullMQAdapter` lets the UI inspect a queue. |
 
@@ -67,13 +68,13 @@ Each `Queue` and `Worker` receives its own options object. BullMQ opens the actu
 
 ## Queue and worker
 
-`demo-job.ts` is the contract shared by the producer and the consumer:
+`packages/jobs/demo/job.ts` is the contract shared by the producer and the consumer:
 
 - `DEMO_QUEUE_NAME` is the queue name: `demo`.
 - `demoJobData` is the payload the producer sends.
 - `demoJobResult` is what the worker returns.
 
-`queue.ts` creates the producer:
+`packages/jobs/demo/queue.ts` creates the producer:
 
 ```ts
 export const demoQueue = new Queue<DemoJobData, DemoJobResult, "ping">(DEMO_QUEUE_NAME, {
@@ -171,10 +172,10 @@ If the dashboard shows a waiting job and the worker log is silent, the `@repo/jo
 
 Keep one queue per kind of work. Do not put invitation email and Jira sync on the same queue.
 
-1. Add a contract file in `packages/jobs`, for example `invitation-job.ts`, with the queue name, Zod payload, and result.
-2. Add `invitation-queue.ts` with a `Queue`, an `enqueue...` function, and a status function if the caller needs it.
-3. Export the enqueue function from `packages/jobs/index.ts`.
-4. Add a `Worker` in `packages/jobs/worker.ts` for that queue name. One worker process can own several workers.
+1. Add a feature folder such as `packages/jobs/invitations/` with `job.ts` for the queue name, Zod payload, and result.
+2. Add `queue.ts` in that folder with a `Queue`, an `enqueue...` function, and a status function if the caller needs it.
+3. Add `worker.ts` in that folder and export a `startInvitationWorker()` function.
+4. Start that worker from `packages/jobs/worker.ts` and export the queue functions from `packages/jobs/index.ts`.
 5. Add `new BullMQAdapter(invitationQueue)` in `apps/api/src/queue-dashboard.ts`.
 6. Add a tRPC mutation that authorizes the caller, calls the enqueue function, and returns the `jobId`.
 7. Restart `pnpm dev` and confirm the new queue appears in the dashboard.

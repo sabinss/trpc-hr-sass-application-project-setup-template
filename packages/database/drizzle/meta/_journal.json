@@ -15,6 +15,13 @@
       "when": 1793079932285,
       "tag": "0001_harsh_captain_universe",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793188775808,
+      "tag": "0002_stormy_the_stranger",
+      "breakpoints": true
     }
   ]
 }

@@ -366,6 +366,9 @@ importers:
 
   packages/jobs:
     dependencies:
+      '@repo/database':
+        specifier: workspace:^
+        version: link:../database
       '@repo/logger':
         specifier: workspace:*
         version: link:../logger

@@ -17,6 +17,8 @@ coverage
 
 # Turbo
 .turbo
+.local/
+local-reports/
 
 # Vercel
 .vercel

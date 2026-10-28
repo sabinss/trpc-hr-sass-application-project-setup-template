@@ -7,6 +7,7 @@ import { generateOpenApiDocument, createOpenApiExpressMiddleware } from "trpc-to
 import { apiReference } from "@scalar/express-api-reference";
 
 import { serverRouter, createContext } from "@repo/trpc/server";
+import { getReportDownload } from "@repo/jobs";
 
 import { env } from "./env";
 import { mountQueueDashboard, queueDashboardPath } from "./queue-dashboard";
@@ -36,6 +37,20 @@ app.get("/", (req, res) => {
 
 app.get("/health", (req, res) => {
   return res.json({ message: "EMS API server is healthy", healthy: true });
+});
+
+app.get("/reports/:reportId/download", async (req, res, next) => {
+  try {
+    const report = await getReportDownload(req.params.reportId);
+    if (!report) return res.status(404).json({ message: "Report file is not ready" });
+
+    res.attachment(report.fileName);
+    return res.sendFile(report.filePath, (error) => {
+      if (error) next(error);
+    });
+  } catch (error) {
+    return next(error);
+  }
 });
 
 logger.debug(`openapi.json: ${env.BASE_URL}/openapi.json`);
