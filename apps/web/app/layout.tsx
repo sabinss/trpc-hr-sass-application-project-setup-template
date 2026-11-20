@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import "./globals.css";
 import { GlobalProviders } from "~/providers/global";
 
 const geistSans = localFont({
@@ -13,7 +12,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Streamyst",
+  title: "EMS",
   description: "Media Forwarding",
 };
 

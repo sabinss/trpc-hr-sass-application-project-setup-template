@@ -5,7 +5,7 @@ import { authRouter } from "./routes/auth/route";
 import { publicProcedure } from "./trpc";
 
 export const serverRouter = router({
-  health: healthRouter,
+  healthRouter: healthRouter,
   authRouter: authRouter,
 });
 

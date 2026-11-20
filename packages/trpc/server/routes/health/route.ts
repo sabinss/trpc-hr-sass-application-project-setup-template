@@ -15,4 +15,21 @@ export const healthRouter = router({
         status: "healthy",
       };
     }),
+  emsHealthCheck: publicProcedure
+    .input(
+      z.object({
+        message: z.string().describe("message to be sent to the ems"),
+      }),
+    )
+    .output(
+      z.object({
+        message: z.string().describe("message from the ems"),
+      }),
+    )
+    .query(async (ctx) => {
+      console.log(ctx.input);
+      return {
+        message: "Message" + ctx.input.message,
+      };
+    }),
 });
